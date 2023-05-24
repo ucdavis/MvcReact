@@ -36,6 +36,7 @@ public class ReactScriptsTagHelper : TagHelper
             // in development, we want to use the CRA dev server and not cache anything
             output.TagName = "script";
             output.Attributes.Add("src", _options.DevServerBundlePath);
+            output.TagMode = TagMode.StartTagAndEndTag;
             return;
         }
 

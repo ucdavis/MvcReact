@@ -67,6 +67,13 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IOptions
 }
 ```
 
+Import tag helpers in `_ViewImports.cshtml`
+```cshtml
+@using MvcReact 
+@addTagHelper *, MvcReact
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+```
+
 Use `<react-scripts />` and `<react-styles />` tag helpers to embed relavent tags in a page/view
 
 ```html
