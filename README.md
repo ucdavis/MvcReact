@@ -8,19 +8,19 @@ dotnet add package MvcReact
 
 ## Usage
 
-### Add a using statement in your app initialization code (usually `Program.cs` or `Startup.cs`)
+Add a using statement in your app initialization code (usually `Program.cs` or `Startup.cs`)
 
 ```csharp
 using MvcReact;
 ```
 
-### Initialize services
+Initialize services
 
 ```csharp
 services.AddMvcReact();
 ```
 
-### Or for explicit control over settings...
+Or for explicit control over settings...
 
 ```csharp
 services.AddMvcReact(options =>
@@ -37,7 +37,7 @@ services.AddMvcReact(options =>
 });
 ```
 
-### `UseMvcReactStaticFiles` and `UseMvcReact` are the important extension methods here, along with `MvcReactOptions.ExcludeHmrPathsRegex` for letting hmr requests fall through
+`UseMvcReactStaticFiles` and `UseMvcReact` are the important extension methods here, along with `MvcReactOptions.ExcludeHmrPathsRegex` for letting hmr requests fall through
 
 ```csharp
 public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IOptions<MvcReactOptions> mvcReactOptions)
@@ -67,7 +67,7 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IOptions
 }
 ```
 
-### Use `<react-scripts />` and `<react-styles />` tag helpers to embed relavent tags in a page/view
+Use `<react-scripts />` and `<react-styles />` tag helpers to embed relavent tags in a page/view
 
 ```html
 @model SomeModel
