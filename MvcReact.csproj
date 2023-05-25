@@ -1,6 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <PackageId>MvcReact</PackageId>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/ucdavis/MvcReact</PackageProjectUrl>
+    <Version>1.1.0</Version>
+    <Authors>Spruce Weber-Milne</Authors>
+    <Company>UC Davis</Company>
+    <Description>Library to simplify setup of AspNetCore app that serves both Mvc and React pages</Description>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
