@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
-
+using MvcReact.Internal;
 using MvcReact.TagHelpers;
 
 namespace MvcReact;
@@ -42,7 +42,8 @@ public static class ServiceCollectionExtensions
                 configuration.RootPath = options.BuildPath;
             });            
 
-            services.AddScoped<IFileProvider>(_ => new PhysicalFileProvider(Directory.GetCurrentDirectory()));  // lgtm [cs/local-not-disposed] 
+            services.AddMemoryCache();
+            services.AddScoped<IInternalFileProvider>(_ => new InternalFileProvider(Directory.GetCurrentDirectory()));  // lgtm [cs/local-not-disposed] 
             services.AddTransient<ITagHelper, ReactScriptsTagHelper>();
             services.AddTransient<ITagHelper, ReactStylesTagHelper>();
             return services;

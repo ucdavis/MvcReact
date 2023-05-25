@@ -8,17 +8,18 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
+using MvcReact.Internal;
 
 namespace MvcReact.TagHelpers;
 
 public class ReactScriptsTagHelper : TagHelper
 {
-    private readonly IFileProvider _fileProvider;
+    private readonly IInternalFileProvider _fileProvider;
     private readonly IConfiguration _configuration;
     private readonly MvcReactOptions _options;
     private readonly IMemoryCache _memoryCache;
 
-    public ReactScriptsTagHelper(IFileProvider fileProvider, IConfiguration configuration, IOptions<MvcReactOptions> options,
+    public ReactScriptsTagHelper(IInternalFileProvider fileProvider, IConfiguration configuration, IOptions<MvcReactOptions> options,
         IMemoryCache memoryCache)
     {
         _fileProvider = fileProvider;
