@@ -1,3 +1,8 @@
+[![Build Status](https://dev.azure.com/ucdavis/MvcReact/_apis/build/status/ucdavis.MvcReact?branchName=main)](https://dev.azure.com/ucdavis/MvcReact/_build/latest?definitionId=35&branchName=main)
+[![Build Status](https://github.com/ucdavis/MvcReact/actions/workflows/codeql.yml/badge.svg)](https://github.com/ucdavis/MvcReact/actions/workflows/codeql.yml/badge.svg)
+[![NuGet version (MvcReact)](https://img.shields.io/nuget/v/MvcReact.svg)](https://www.nuget.org/packages/MvcReact/)
+
+
 # MvcReact
 Library to simplify setup of AspNetCore app that serves both Mvc and React pages
 

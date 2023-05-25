@@ -1,0 +1,48 @@
+trigger:
+  - main
+
+pool:
+  vmImage: "ubuntu-latest"
+
+variables:
+  solution: "**/*.sln"
+  buildPlatform: "Any CPU"
+  buildConfiguration: "Release"
+  majorVersion: 1
+  minorVersion: 0
+  patchVersion: $[counter(variables['minorVersion'], 0)]
+  version: $(majorVersion).$(minorVersion).$(patchVersion)
+
+name: $(majorVersion).$(minorVersion).$(patchVersion)
+
+steps:
+  - task: UseDotNet@2
+    inputs:
+      packageType: "sdk"
+      version: "6.0.x"
+
+  - task: NuGetToolInstaller@1
+
+  - task: NuGetCommand@2
+    inputs:
+      restoreSolution: "$(solution)"
+
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: "pack"
+      packagesToPack: "MvcReact.csproj"
+      versioningScheme: "byBuildNumber"
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: "$(Build.ArtifactStagingDirectory)"
+      ArtifactName: "drop"
+      publishLocation: "Container"
+
+  - task: NuGetCommand@2
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    inputs:
+      command: "push"
+      packagesToPush: "$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg"
+      nuGetFeedType: "external"
+      publishFeedCredentials: "NuGet"
