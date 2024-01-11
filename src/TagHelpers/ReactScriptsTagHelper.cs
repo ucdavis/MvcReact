@@ -34,10 +34,32 @@ public class ReactScriptsTagHelper : TagHelper
 
         if (string.Equals(environment, Constants.ENVIRONMENT_DEVELOPMENT, StringComparison.OrdinalIgnoreCase))
         {
-            // in development, we want to use the CRA dev server and not cache anything
-            output.TagName = "script";
-            output.Attributes.Add("src", _options.DevServerBundlePath);
-            output.TagMode = TagMode.StartTagAndEndTag;
+            // in development, we want to use the dev server and not cache anything
+            switch (_options.DevServerType)
+            {
+                case DevServerType.CRA:
+                    output.TagName = "script";
+                    output.Attributes.Add("src", _options.CraDevServerBundlePath);
+                    output.TagMode = TagMode.StartTagAndEndTag;
+                    break;
+                case DevServerType.Vite:
+                    // if TagName is not set to null, it ignores explicitly-set content and expects attributes to be individually set  
+                    output.TagName = null;
+                    output.Content.SetHtmlContent($@"
+                        <script type=""module"">
+                            import RefreshRuntime from ""http://localhost:{_options.DevServerPort}/@react-refresh""
+                            RefreshRuntime.injectIntoGlobalHook(window)
+                            window.$RefreshReg$ = () => {{}}
+                            window.$RefreshSig$ = () => (type) => type
+                            window.__vite_plugin_react_preamble_installed__ = true
+                        </script>                    
+                        <script type=""module"" src=""http://localhost:{_options.DevServerPort}/@vite/client""></script>
+                        <script type=""module"" src=""http://localhost:{_options.DevServerPort}{_options.ViteDevServerEntry}""></script>
+                        ");
+                    break;
+                default:
+                    throw new Exception($"Unknown dev server type: {_options.DevServerType}");
+            }
             return;
         }
 

@@ -4,12 +4,17 @@
 
 
 # MvcReact
-Library to simplify setup of AspNetCore app that serves both Mvc and React pages
+Library to simplify setup of AspNetCore app that serves both Mvc and React pages.
+Supported dev servers are CRA (Webpack) and Vite.
 
 ## Installation
 ```bash
 dotnet add package MvcReact
+# to install vite dependencies
+cd ClientApp
+npm install -D vite @vitejs/plugin-react
 ```
+
 
 ## Usage
 
@@ -19,26 +24,50 @@ Add a using statement in your app initialization code (usually `Program.cs` or `
 using MvcReact;
 ```
 
-Initialize services
+Initialize CRA services
 
 ```csharp
-services.AddMvcReact();
+services.AddCraServices();
 ```
 
 Or for explicit control over settings...
 
 ```csharp
-services.AddMvcReact(options =>
+services.AddCraServices(options =>
 {
     options.SourcePath = "ClientApp";
     options.BuildPath = "ClientApp/build";
     options.IndexHtmlPath = "ClientApp/build/index.html";
     options.StaticAssetBasePath = "/static";
     options.StaticAssetHeaderCacheMaxAgeDays = 365;
-    options.DevServerBundlePath = "/static/js/bundle.js";
+    options.CraDevServerBundlePath = "/static/js/bundle.js";
     options.DevServerStartScript = "start";
+    options.DevServerPort = 3000;
     options.TagHelperCacheMinutes = 30;
     options.ExcludeHmrPathsRegex = "^(?!ws|.*?hot-update.js(on)?).*$";
+});
+```
+
+Initialize Vite services
+
+```csharp
+services.AddViteServices();
+```
+
+Or for explicit control over settings...
+
+```csharp
+services.AddViteServices(options =>
+{
+    options.SourcePath = "ClientApp";
+    options.BuildPath = "ClientApp/build";
+    options.IndexHtmlPath = "ClientApp/build/index.html";
+    options.StaticAssetBasePath = "/static";
+    options.StaticAssetHeaderCacheMaxAgeDays = 365;
+    options.DevServerStartScript = "start";
+    options.DevServerPort = 5173;
+    options.ViteDevServerEntry = "/index.tsx";
+    options.TagHelperCacheMinutes = 30;
 });
 ```
 
@@ -100,4 +129,39 @@ Use `<react-scripts />` and `<react-styles />` tag helpers to embed relavent tag
 {
     <react-scripts />
 }
+```
+
+Configuring Vite
+
+```typescript
+import { UserConfig, defineConfig, loadEnv } from "vite";
+import react from "@vitejs/plugin-react";
+
+export default defineConfig(async ({ mode }) => {
+  // Load app-level env vars to node-level env vars.
+  const env = { ...process.env, ...loadEnv(mode, process.cwd()) };
+  process.env = env;
+
+  const config: UserConfig = {
+    root: "src",
+    publicDir: "public",
+    build: {
+      outDir: "build",
+      // rollupOptions beyond scope of this snippet
+    },
+    plugins: [react()],
+    optimizeDeps: {
+      include: [],
+    },
+    server: {
+      port: 5173,
+      hmr: {
+        clientPort: 5173,
+      },
+      strictPort: true,
+    },
+  };
+
+  return config;
+});
 ```
