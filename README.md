@@ -165,3 +165,14 @@ export default defineConfig(async ({ mode }) => {
   return config;
 });
 ```
+
+Vite tends to leave orphaned node processes after a debugging session. This can be addressed by
+having the npm start script kill the node process listening on a given port.
+
+```json
+{
+  "scripts": {
+    "start": "npx kill-port 5173 && vite"
+  }
+}
+```
