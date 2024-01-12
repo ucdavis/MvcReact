@@ -43,8 +43,10 @@ public class ReactScriptsTagHelper : TagHelper
                     output.TagMode = TagMode.StartTagAndEndTag;
                     break;
                 case DevServerType.Vite:
-                    // if TagName is not set to null, it ignores explicitly-set content and expects attributes to be individually set  
+                    // set TagName null in order to allow explicitly set content  
                     output.TagName = null;
+                    // Vite doesn't have an opportunity to inject @react-refresh init code when it's not serving index.html,
+                    // so we have to do it manually
                     output.Content.SetHtmlContent($@"
                         <script type=""module"">
                             import RefreshRuntime from ""http://localhost:{_options.DevServerPort}/@react-refresh""
