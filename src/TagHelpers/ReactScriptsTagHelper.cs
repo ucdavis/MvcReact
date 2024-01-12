@@ -34,10 +34,34 @@ public class ReactScriptsTagHelper : TagHelper
 
         if (string.Equals(environment, Constants.ENVIRONMENT_DEVELOPMENT, StringComparison.OrdinalIgnoreCase))
         {
-            // in development, we want to use the CRA dev server and not cache anything
-            output.TagName = "script";
-            output.Attributes.Add("src", _options.DevServerBundlePath);
-            output.TagMode = TagMode.StartTagAndEndTag;
+            // in development, we want to use the dev server and not cache anything
+            switch (_options.DevServerType)
+            {
+                case DevServerType.CRA:
+                    output.TagName = "script";
+                    output.Attributes.Add("src", _options.CraDevServerBundlePath);
+                    output.TagMode = TagMode.StartTagAndEndTag;
+                    break;
+                case DevServerType.Vite:
+                    // set TagName null in order to allow explicitly set content  
+                    output.TagName = null;
+                    // Vite doesn't have an opportunity to inject @react-refresh init code when it's not serving index.html,
+                    // so we have to do it manually
+                    output.Content.SetHtmlContent($@"
+                        <script type=""module"">
+                            import RefreshRuntime from ""http://localhost:{_options.DevServerPort}/@react-refresh""
+                            RefreshRuntime.injectIntoGlobalHook(window)
+                            window.$RefreshReg$ = () => {{}}
+                            window.$RefreshSig$ = () => (type) => type
+                            window.__vite_plugin_react_preamble_installed__ = true
+                        </script>                    
+                        <script type=""module"" src=""http://localhost:{_options.DevServerPort}/@vite/client""></script>
+                        <script type=""module"" src=""http://localhost:{_options.DevServerPort}{_options.ViteDevServerEntry}""></script>
+                        ");
+                    break;
+                default:
+                    throw new Exception($"Unknown dev server type: {_options.DevServerType}");
+            }
             return;
         }
 

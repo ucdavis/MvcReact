@@ -12,7 +12,23 @@ public class MvcReactOptions
     /// The path to the js bundle served by the CRA dev server
     /// </summary>
     /// <value></value>
-    public string DevServerBundlePath { get; set; } = "";
+    public string CraDevServerBundlePath { get; set; } = "";
+
+    /// <summary>
+    /// The path to the entry point for the Vite dev server
+    /// </summary>
+    public string ViteDevServerEntry { get; set; } = "main.tsx";
+
+    /// <summary>
+    /// The type of dev server used (CRA or Vite)
+    /// </summary>
+    public string DevServerType { get; set; } = MvcReact.DevServerType.CRA;
+
+    /// <summary>
+    /// The path to the js bundle served by the CRA dev server
+    /// </summary>
+    /// <value></value>
+    public int DevServerPort { get; set; } = 3000;
 
     /// <summary>
     /// The npm script to start the CRA dev server

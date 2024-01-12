@@ -12,12 +12,16 @@ public static class ApplicationBuilderExtensions
 {
     public static IApplicationBuilder UseMvcReact(this IApplicationBuilder app)
     {
+        // MS suggested hack to ensure correct ordering of routing and spa middleware
+        app.UseEndpoints(e => { });
+
         var env = app.ApplicationServices.GetRequiredService<IWebHostEnvironment>();
         var options = app.ApplicationServices.GetRequiredService<IOptions<MvcReactOptions>>().Value;
 
         app.UseSpa(spa =>
         {
             spa.Options.SourcePath = options.SourcePath;
+            spa.Options.DevServerPort = options.DevServerPort;
 
             if (env.IsDevelopment())
             {
