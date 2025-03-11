@@ -58,8 +58,10 @@ public static class ServiceCollectionExtensions
                 options.DevServerStartScript = "start";
                 options.DevServerType = DevServerType.Vite;
                 options.DevServerPort = 5173;
-                options.ViteDevServerEntry = "/index.tsx";
+                options.ViteDevServerEntry = "/src/index.tsx";
                 options.TagHelperCacheMinutes = 30;
+                // Vite dev server requests aren't proxied, so no paths to exclude...
+                options.ExcludeHmrPathsRegex = "^.*$";
 
 
                 // allow for custom config...
