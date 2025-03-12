@@ -71,19 +71,31 @@ public class ReactScriptsTagHelper : TagHelper
         var cacheKey = $"${nameof(ReactScriptsTagHelper)}_{context.UniqueId}";
         if (!_memoryCache.TryGetValue(cacheKey, out content))
         {
-            // Get the CRA generated index file, which includes optimized scripts
-            var indexPage = _fileProvider.GetFileInfo(_options.IndexHtmlPath);
+            switch (_options.DevServerType)
+            {
+                case DevServerType.CRA:
+                    // Get the CRA generated index file, which includes optimized scripts
+                    var indexPage = _fileProvider.GetFileInfo(_options.IndexHtmlPath);
 
-            // read the file
-            var fileContents = await File.ReadAllTextAsync(indexPage.PhysicalPath);
+                    // read the file
+                    var fileContents = await File.ReadAllTextAsync(indexPage.PhysicalPath);
 
-            // find all script tags
-            var scriptTags = Regex.Matches(fileContents, "<script.*?</script>", RegexOptions.Singleline);
+                    // find all script tags
+                    var scriptTags = Regex.Matches(fileContents, "<script.*?</script>", RegexOptions.Singleline)
+                        .Select(m => m.Value);
 
-            // get the script tags as strings
-            var scriptTagsAsStrings = scriptTags.Select(m => m.Value).ToArray();
+                    content = string.Join(Environment.NewLine, scriptTags);
+                    break;
+                case DevServerType.Vite:
+                    // Get all JavaScript files in the Assets subfolder
+                    var assetsFolder = Path.Combine(_options.BuildPath, "assets");
+                    var jsFiles = Directory.GetFiles(assetsFolder, "*.js");
 
-            content = string.Join(Environment.NewLine, scriptTagsAsStrings);
+                    // Generate script tags for each JavaScript file
+                    scriptTags = jsFiles.Select(file => $"<script src=\"./assets/{Path.GetFileName(file)}\" type=\"module\"></script>");
+                    content = string.Join(Environment.NewLine, scriptTags);
+                    break;
+            }
 
             _memoryCache.Set(cacheKey, content, new MemoryCacheEntryOptions
             {
