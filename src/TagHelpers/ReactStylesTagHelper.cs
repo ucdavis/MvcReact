@@ -41,25 +41,39 @@ public class ReactStylesTagHelper : TagHelper
         var cacheKey = $"${nameof(ReactStylesTagHelper)}_{context.UniqueId}";
         if (!_memoryCache.TryGetValue(cacheKey, out content))
         {
-            // Get the CRA generated index file, which includes optimized scripts
-            var indexPage = _fileProvider.GetFileInfo(_options.IndexHtmlPath);
+            switch (_options.DevServerType)
+            {
+                case DevServerType.CRA:
+                    // Get the CRA generated index file, which includes optimized scripts
+                    var indexPage = _fileProvider.GetFileInfo(_options.IndexHtmlPath);
 
-            // read the file
-            var fileContents = await File.ReadAllTextAsync(indexPage.PhysicalPath);
+                    // read the file
+                    var fileContents = await File.ReadAllTextAsync(indexPage.PhysicalPath);
 
-            // find all link tags with the rel attribute set to stylesheet
-            var linkTags = Regex.Matches(fileContents, "<link.*?>", RegexOptions.IgnoreCase);
+                    // find all link tags with the rel attribute set to stylesheet
+                    var linkTags = Regex.Matches(fileContents, "<link.*?>", RegexOptions.IgnoreCase)
+                        .Where(m => m.Value.Contains("rel=\"stylesheet\""))
+                        .Select(m => m.Value);
 
-            // make an array with just the stylesheet links
-            var styleLinksAsStrings = linkTags.Where(m => m.Value.Contains("rel=\"stylesheet\""))
-                .Select(m => m.Value).ToArray();
+                    content = string.Join(Environment.NewLine, linkTags);
+                    break;
+                case DevServerType.Vite:
+                    // Get all css files in the Assets subfolder
+                    var assetsFolder = Path.Combine(_options.BuildPath, "assets");
+                    var cssFiles = Directory.GetFiles(assetsFolder, "*.css");
 
-            content = string.Join(Environment.NewLine, styleLinksAsStrings);
+                    // Generate link tags for each css file
+                    linkTags = cssFiles.Select(file => $"<link href=\"./assets/{Path.GetFileName(file)}\" rel=\"stylesheet\">");
+                    content = string.Join(Environment.NewLine, linkTags);
+                    break;
+                default:
+                    throw new Exception($"Unknown dev server type: {_options.DevServerType}");
+            }
 
             _memoryCache.Set(cacheKey, content, new MemoryCacheEntryOptions
             {
                 AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(_options.TagHelperCacheMinutes)
-            });            
+            });
         }
 
         // if TagName is not set to null, it ignores explicitly-set content and expects attributes to be individually set  
