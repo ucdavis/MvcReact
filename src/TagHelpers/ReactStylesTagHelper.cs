@@ -63,7 +63,7 @@ public class ReactStylesTagHelper : TagHelper
                     var cssFiles = Directory.GetFiles(assetsFolder, "*.css");
 
                     // Generate link tags for each css file
-                    linkTags = cssFiles.Select(file => $"<link href=\"./assets/{Path.GetFileName(file)}\" rel=\"stylesheet\">");
+                    linkTags = cssFiles.Select(file => $"<link href=\"/assets/{Path.GetFileName(file)}\" rel=\"stylesheet\">");
                     content = string.Join(Environment.NewLine, linkTags);
                     break;
                 default:
