@@ -66,6 +66,8 @@ public class ReactStylesTagHelper : TagHelper
                     linkTags = cssFiles.Select(file => $"<link href=\"./assets/{Path.GetFileName(file)}\" rel=\"stylesheet\">");
                     content = string.Join(Environment.NewLine, linkTags);
                     break;
+                default:
+                    throw new Exception($"Unknown dev server type: {_options.DevServerType}");
             }
 
             _memoryCache.Set(cacheKey, content, new MemoryCacheEntryOptions

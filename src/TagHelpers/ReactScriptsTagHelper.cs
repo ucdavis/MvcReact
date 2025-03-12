@@ -95,6 +95,8 @@ public class ReactScriptsTagHelper : TagHelper
                     scriptTags = jsFiles.Select(file => $"<script src=\"./assets/{Path.GetFileName(file)}\" type=\"module\"></script>");
                     content = string.Join(Environment.NewLine, scriptTags);
                     break;
+                default:
+                    throw new Exception($"Unknown dev server type: {_options.DevServerType}");
             }
 
             _memoryCache.Set(cacheKey, content, new MemoryCacheEntryOptions
