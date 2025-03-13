@@ -92,7 +92,7 @@ public class ReactScriptsTagHelper : TagHelper
                     var jsFiles = Directory.GetFiles(assetsFolder, "*.js");
 
                     // Generate script tags for each JavaScript file
-                    scriptTags = jsFiles.Select(file => $"<script src=\"./assets/{Path.GetFileName(file)}\" type=\"module\"></script>");
+                    scriptTags = jsFiles.Select(file => $"<script src=\"/assets/{Path.GetFileName(file)}\" type=\"module\"></script>");
                     content = string.Join(Environment.NewLine, scriptTags);
                     break;
                 default:
