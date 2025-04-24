@@ -28,6 +28,8 @@ public static class ServiceCollectionExtensions
                 options.DevServerStartScript = "start";
                 options.DevServerType = DevServerType.CRA;
                 options.DevServerPort = 3000;
+                options.DevServerHost = "localhost";
+                options.DevServerScheme = "http"; // http is safe because AspNetCore proxies requests to the CRA dev server
                 options.TagHelperCacheMinutes = 30;
                 options.ExcludeHmrPathsRegex = "^(?!ws|.*?hot-update.js(on)?).*$";
 
@@ -58,6 +60,8 @@ public static class ServiceCollectionExtensions
                 options.DevServerStartScript = "start";
                 options.DevServerType = DevServerType.Vite;
                 options.DevServerPort = 5173;
+                options.DevServerHost = "localhost";
+                options.DevServerScheme = "https"; // https is needed because Vite dev server handles requests directly from browser
                 options.ViteDevServerEntry = "/src/index.tsx";
                 options.TagHelperCacheMinutes = 30;
                 // Vite dev server requests aren't proxied, so no paths to exclude...

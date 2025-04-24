@@ -9,7 +9,7 @@ variables:
   buildPlatform: "Any CPU"
   buildConfiguration: "Release"
   majorVersion: 2
-  minorVersion: 3
+  minorVersion: 4
   patchVersion: $[counter(variables['minorVersion'], 0)]
   version: $(majorVersion).$(minorVersion).$(patchVersion)
 

@@ -49,14 +49,14 @@ public class ReactScriptsTagHelper : TagHelper
                     // so we have to do it manually
                     output.Content.SetHtmlContent($@"
                         <script type=""module"">
-                            import RefreshRuntime from ""http://localhost:{_options.DevServerPort}/@react-refresh""
+                            import RefreshRuntime from ""{_options.DevServerScheme}://{_options.DevServerHost}:{_options.DevServerPort}/@react-refresh""
                             RefreshRuntime.injectIntoGlobalHook(window)
                             window.$RefreshReg$ = () => {{}}
                             window.$RefreshSig$ = () => (type) => type
                             window.__vite_plugin_react_preamble_installed__ = true
                         </script>                    
-                        <script type=""module"" src=""http://localhost:{_options.DevServerPort}/@vite/client""></script>
-                        <script type=""module"" src=""http://localhost:{_options.DevServerPort}{_options.ViteDevServerEntry}""></script>
+                        <script type=""module"" src=""{_options.DevServerScheme}://{_options.DevServerHost}:{_options.DevServerPort}/@vite/client""></script>
+                        <script type=""module"" src=""{_options.DevServerScheme}://{_options.DevServerHost}:{_options.DevServerPort}{_options.ViteDevServerEntry}""></script>
                         ");
                     break;
                 default:
