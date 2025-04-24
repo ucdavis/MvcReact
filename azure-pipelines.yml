@@ -42,7 +42,6 @@ steps:
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
     inputs:
       command: "push"
-      publishVstsFeed: ""
       packagesToPush: "$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg"
       nuGetFeedType: "external"
       externalFeedCredentials: "NuGet"
