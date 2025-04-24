@@ -31,6 +31,16 @@ public class MvcReactOptions
     public int DevServerPort { get; set; } = 3000;
 
     /// <summary>
+    /// The host name of the dev server
+    /// </summary>
+    public string DevServerHost { get; set; } = "localhost";
+
+    /// <summary>
+    /// The scheme of the dev server (http or https)
+    /// </summary>
+    public string DevServerScheme { get; set; } = "http";
+
+    /// <summary>
     /// The npm script to start the CRA dev server
     /// </summary>
     /// <value></value>
