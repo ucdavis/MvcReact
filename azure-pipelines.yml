@@ -38,11 +38,14 @@ steps:
       ArtifactName: "drop"
       publishLocation: "Container"
 
-  - task: DotNetCoreCLI@2
+  # DotNetCoreCLI@2 does not support azure encrypted variables
+  # so we need to use a script task to push the package
+  - script: |
+      dotnet nuget push "$(Build.ArtifactStagingDirectory)/**/*.nupkg" `
+        --api-key "$(NUGET_API_KEY)" `
+        --source "https://api.nuget.org/v3/index.json" `
+        --skip-duplicate
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
-    inputs:
-      command: 'push'
-      packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
-      nuGetFeedType: 'external'
-      publishFeedCredentials: 'NuGet'
-      pushFeed: 'https://api.nuget.org/v3/index.json'
+    displayName: 'Push NuGet package to NuGet.org'
+    env:
+      NUGET_API_KEY: $(NUGET_API_KEY)
