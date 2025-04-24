@@ -41,9 +41,9 @@ steps:
   # DotNetCoreCLI@2 does not support azure encrypted variables
   # so we need to use a script task to push the package
   - script: |
-      dotnet nuget push "$(Build.ArtifactStagingDirectory)/**/*.nupkg" `
-        --api-key "$(NUGET_API_KEY)" `
-        --source "https://api.nuget.org/v3/index.json" `
+      dotnet nuget push "$(Build.ArtifactStagingDirectory)/**/*.nupkg" \
+        --api-key "$(NUGET_API_KEY)" \
+        --source "https://api.nuget.org/v3/index.json" \
         --skip-duplicate
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
     displayName: 'Push NuGet package to NuGet.org'
